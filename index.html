@@ -102,13 +102,10 @@
                             <label for="aiModel" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                                 AI Model <span class="text-red-500">*</span>
                             </label>
-                            <select id="aiModel" required
-                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-primary-300 focus:border-primary-500">
-                                <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash</option>
-                                <option value="google/gemini-2.5-pro-exp-03-25:free">Gemini 2.5 Pro</option>
-                                <option value="google/learnlm-1.5-pro-experimental:free">LearnLM 1.5 Pro</option>
-                                <option value="anthropic/claude-3-haiku-20240307">Claude 3 Haiku</option>
-                            </select>
+                            <input type="text" id="aiModel" required
+                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-2 focus:ring-primary-300 focus:border-primary-500"
+                                placeholder="e.g., google/gemini-1.5-pro-latest">
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter the OpenRouter model ID</p>
                         </div>
 
                         <div>
@@ -270,7 +267,7 @@
                 themeToggle: document.getElementById('themeToggle'),
                 apiKeyInput: document.getElementById('apiKey'),
                 toggleApiKey: document.getElementById('toggleApiKey'),
-                aiModelSelect: document.getElementById('aiModel'),
+                aiModelInput: document.getElementById('aiModel'),
                 languageSelect: document.getElementById('language'),
                 toneStyleSelect: document.getElementById('toneStyle'),
                 scriptForm: document.getElementById('scriptForm'),
@@ -311,7 +308,7 @@
                 
                 // AI Model
                 if (localStorage.getItem('aiModel')) {
-                    elements.aiModelSelect.value = localStorage.getItem('aiModel');
+                    elements.aiModelInput.value = localStorage.getItem('aiModel');
                 }
                 
                 // Language
@@ -340,7 +337,7 @@
                 elements.apiKeyInput.addEventListener('change', validateAndSaveApiKey);
                 
                 // Save preferences
-                elements.aiModelSelect.addEventListener('change', savePreference);
+                elements.aiModelInput.addEventListener('change', savePreference);
                 elements.languageSelect.addEventListener('change', savePreference);
                 elements.toneStyleSelect.addEventListener('change', savePreference);
                 document.getElementById('length').addEventListener('change', savePreference);
@@ -411,7 +408,7 @@
                     productName: document.getElementById('productName').value.trim(),
                     scenario: document.getElementById('scenario').value.trim(),
                     length: document.getElementById('length').value,
-                    model: elements.aiModelSelect.value,
+                    model: elements.aiModelInput.value,
                     language: elements.languageSelect.value,
                     toneStyle: elements.toneStyleSelect.value
                 };
@@ -596,14 +593,20 @@
                 
                 // System message explaining the TikTok script structure
                 const systemMessage = `Create a TikTok affiliate marketing script for the product provided. Follow this structure:
-                1. Hook: Start with an attention-grabbing opening (5-7 seconds)
-                2. Context: Briefly describe the problem the viewer might be facing
-                3. Reveal: Introduce the product as the solution
-                4. Demo: Explain key features and benefits 
-                5. Testimonial: Include a brief hypothetical user experience
+                1. Hook: Start with an attention-grabbing opening that identifies with the viewer's problem (5-7 seconds)
+                2. Context: Briefly describe the problem the viewer might be facing and its impact on their life
+                3. Reveal: Introduce the product as the solution that directly benefits the viewer
+                4. Demo: Explain specific benefits to the viewer first, then key features (emphasize tangible value)
+                5. Testimonial: Include a brief hypothetical user experience with measurable results
                 6. Call-to-Action: End with a gentle, non-pushy CTA to check link in bio
                 
-                IMPORTANT: Focus on being helpful and authentic rather than salessy. Avoid hard selling tactics, pushy language, or making exaggerated claims. The script should feel like friendly advice from a trusted friend rather than a sales pitch.
+                IMPORTANT: 
+                - Focus on being helpful and authentic rather than salessy
+                - Clearly communicate SPECIFIC BENEFITS the viewer will gain (e.g., "saves you 2 hours each day" or "reduces eye strain by 70%")
+                - Explain exactly HOW the product will improve the viewer's daily life or solve their problem
+                - Use specific, measurable advantages rather than vague claims
+                - The script should feel like valuable advice from a trusted friend rather than a sales pitch
+                - Always prioritize what's in it for the viewer over technical features
                 
                 ${languagePrompt}
                 Make the tone ${tonePrompt}.
